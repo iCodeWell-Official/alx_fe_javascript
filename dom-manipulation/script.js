@@ -16,7 +16,10 @@ newQuoteBtn.addEventListener('click', () => {
     function showRandomQuote() {
         const randomIndex = Math.floor(Math.random() * quotesArray.length);
         const randomQuote = quotesArray[randomIndex];
+        para.innerHTML = `Quote: ${randomQuote.text} Category: ${randomQuote.category}`;
     }
+
+    showRandomQuote();
 })
 
 function createAddQuoteForm() {
