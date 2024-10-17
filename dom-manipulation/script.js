@@ -3,7 +3,7 @@ const newQuoteBtn = document.getElementById("newQuote");
 const quoteDisplay = document.getElementById("quoteDisplay");
 
 // Declaring quotes
-const quotesArray = [
+let quotesArray = [
   { text: "text", category: "category" },
   {
     text: "The harder you work for something, the greater you’ll feel when you achieve it.",
@@ -47,9 +47,30 @@ const quotesArray = [
   },
 ];
 
+// Check if there are stored quotes in localStorage and load them if they exist
+if (localStorage.getItem("Quotes")) {
+  quotesArray = JSON.parse(localStorage.getItem("Quotes"));
+}
+
+// Display last viewed quote from sessionStorage when page loads
+function showLastViewedQuote() {
+  const lastViewedQuote = sessionStorage.getItem("lastViewedQuote");
+  if (lastViewedQuote) {
+    const parsedQuote = JSON.parse(lastViewedQuote);
+    const para = document.createElement("p");
+    quoteDisplay.appendChild(para);
+    para.innerHTML = `Quote: ${parsedQuote.text} Category: ${parsedQuote.category}`;
+  }
+}
+
+// Ensure the last viewed quote is shown when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+  showLastViewedQuote();
+});
+
 // Handling 'Show New Quote' button click
 newQuoteBtn.addEventListener("click", () => {
-  // declaring showRandomQuote function
+  // Show a random quote and store it in sessionStorage
   function showRandomQuote() {
     quoteDisplay.innerHTML = "";
     const para = document.createElement("p");
@@ -57,6 +78,9 @@ newQuoteBtn.addEventListener("click", () => {
     const randomIndex = Math.floor(Math.random() * quotesArray.length);
     const randomQuote = quotesArray[randomIndex];
     para.innerHTML = `Quote: ${randomQuote.text} Category: ${randomQuote.category}`;
+
+    // Store the last viewed quote in sessionStorage
+    sessionStorage.setItem("lastViewedQuote", JSON.stringify(randomQuote));
   }
 
   function createAddQuoteForm() {
@@ -87,9 +111,19 @@ newQuoteBtn.addEventListener("click", () => {
 
     // add function to handle 'Add Quote' button click
     addQuoteBtn.addEventListener("click", () => {
-        quotesArray.push({text: quoteInput.value, category: categoryInput.value});
+      if (quoteInput.value === "" || categoryInput.value === "") {
+        alert("Please enter a quote and a category!");
+      } else {
+        quotesArray.push({
+          text: quoteInput.value,
+          category: categoryInput.value,
+        });
         quoteInput.value = "";
         categoryInput.value = "";
+
+        // save the quotes array to local storage
+        localStorage.setItem("Quotes", JSON.stringify(quotesArray));
+      }
     });
   }
 
