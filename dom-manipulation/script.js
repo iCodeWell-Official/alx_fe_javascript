@@ -114,12 +114,18 @@ function createAddQuoteForm() {
 }
 createAddQuoteForm();
 
-// Function to create the 'Export Quotes' button
-function createExportQuotesButton() {
-  const exportBtn = document.createElement("button");
-  exportBtn.innerHTML = "Export Quotes";
-  quoteDisplay.appendChild(exportBtn);
 
+
+
+
+
+
+
+
+
+
+// Function to create download link
+  const exportBtn = document.getElementById('exportBtn');
   exportBtn.addEventListener("click", () => {
     // Convert quotes array to JSON string
     const quotesJSON = JSON.stringify(quotesArray, null, 2);
@@ -137,10 +143,20 @@ function createExportQuotesButton() {
     // Revoke the URL to free up resources
     URL.revokeObjectURL(url);
   });
-}
 
-// Add the export button to the page
-createExportQuotesButton();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Handling 'Show New Quote' button click
 newQuoteBtn.addEventListener("click", () => {
