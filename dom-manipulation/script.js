@@ -114,6 +114,34 @@ function createAddQuoteForm() {
 }
 createAddQuoteForm();
 
+// Function to create the 'Export Quotes' button
+function createExportQuotesButton() {
+  const exportBtn = document.createElement("button");
+  exportBtn.innerHTML = "Export Quotes";
+  quoteDisplay.appendChild(exportBtn);
+
+  exportBtn.addEventListener("click", () => {
+    // Convert quotes array to JSON string
+    const quotesJSON = JSON.stringify(quotesArray, null, 2);
+
+    // Create a Blob from the JSON string
+    const blob = new Blob([quotesJSON], { type: "application/json" });
+
+    // Create a temporary link to download the file
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Quotes.json"; // Filename for the exported file
+    a.click();
+
+    // Revoke the URL to free up resources
+    URL.revokeObjectURL(url);
+  });
+}
+
+// Add the export button to the page
+createExportQuotesButton();
+
 // Handling 'Show New Quote' button click
 newQuoteBtn.addEventListener("click", () => {
   // Show a random quote and store it in sessionStorage
