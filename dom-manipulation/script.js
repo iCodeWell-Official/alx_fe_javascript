@@ -58,7 +58,7 @@ function showLastViewedQuote() {
   if (lastViewedQuote) {
     const parsedQuote = JSON.parse(lastViewedQuote);
     let para = document.createElement("p");
-    para.id = 'quoteParagraph';
+    para.id = "quoteParagraph";
     quoteDisplay.appendChild(para);
     para.innerHTML = `Quote: ${parsedQuote.text} Category: ${parsedQuote.category}`;
   }
@@ -114,49 +114,36 @@ function createAddQuoteForm() {
 }
 createAddQuoteForm();
 
-
-
-
-
-
-
-
-
-
-
 // Function to create download link
-  const exportBtn = document.getElementById('exportBtn');
-  exportBtn.addEventListener("click", () => {
-    // Convert quotes array to JSON string
-    const quotesJSON = JSON.stringify(quotesArray, null, 2);
+const exportBtn = document.getElementById("exportBtn");
+exportBtn.addEventListener("click", () => {
+  // Convert quotes array to JSON string
+  const quotesJSON = JSON.stringify(quotesArray, null, 2);
 
-    // Create a Blob from the JSON string
-    const blob = new Blob([quotesJSON], { type: "application/json" });
+  // Create a Blob from the JSON string
+  const blob = new Blob([quotesJSON], { type: "application/json" });
 
-    // Create a temporary link to download the file
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Quotes.json"; // Filename for the exported file
-    a.click();
+  // Create a temporary link to download the file
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Quotes.json"; // Filename for the exported file
+  a.click();
 
-    // Revoke the URL to free up resources
-    URL.revokeObjectURL(url);
-  });
+  // Revoke the URL to free up resources
+  URL.revokeObjectURL(url);
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+  fileReader.onload = function (event) {
+    const importedQuotes = JSON.parse(event.target.result);
+    quotesArray.push(...importedQuotes);
+    localStorage.setItem("Quotes", JSON.stringify(quotesArray));
+    alert("Quotes imported successfully!");
+  };
+  fileReader.readAsText(event.target.files[0]);
+}
 
 // Handling 'Show New Quote' button click
 newQuoteBtn.addEventListener("click", () => {
@@ -164,7 +151,7 @@ newQuoteBtn.addEventListener("click", () => {
   function showRandomQuote() {
     let para = document.getElementById("quoteParagraph");
     if (!para) {
-      para = document.createElement('p');
+      para = document.createElement("p");
       para.id = "quoteParagraph";
       quoteDisplay.appendChild(para);
     }
