@@ -114,7 +114,7 @@ function createAddQuoteForm() {
 }
 createAddQuoteForm();
 
-// Function to create download link
+// Create export Button
 const exportBtn = document.getElementById("exportBtn");
 exportBtn.addEventListener("click", () => {
   // Convert quotes array to JSON string
@@ -134,6 +134,7 @@ exportBtn.addEventListener("click", () => {
   URL.revokeObjectURL(url);
 });
 
+// Create import button
 function importFromJsonFile(event) {
   const fileReader = new FileReader();
   fileReader.onload = function (event) {
@@ -166,3 +167,57 @@ newQuoteBtn.addEventListener("click", () => {
   // Invoke the functions to show random quote & create add quote form
   showRandomQuote();
 });
+
+function populateCategories() {
+  // Get the select element
+  const categoryFilter = document.getElementById("categoryFilter");
+
+  // Extract unique categories from the quotesArray
+  const uniqueCategories = [...new Set(quotesArray.map((quote) => quote.category))];
+
+  // Remove any existing options (except 'All Categories')
+  categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+
+  // Create and append options for each unique category
+  uniqueCategories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+}
+
+// Call the function to populate categories on page load
+document.addEventListener("DOMContentLoaded", () => {
+  populateCategories();
+});
+
+function filterQuotes() {
+  // Get the selected category from the dropdown
+  const selectedCategory = document.getElementById("categoryFilter").value;
+
+  // Filter quotes based on the selected category
+  const filteredQuotes = quotesArray.filter((quote) => {
+    return selectedCategory === "all" || quote.category === selectedCategory;
+  });
+
+  // Clear the current displayed quote(s)
+  quoteDisplay.innerHTML = "";
+
+  // Display the filtered quotes
+  if (filteredQuotes.length > 0) {
+    filteredQuotes.forEach((quote) => {
+      const para = document.createElement("p");
+      para.textContent = `Quote: ${quote.text} Category: ${quote.category}`;
+      quoteDisplay.appendChild(para);
+    });
+  } else {
+    // If no quotes match, show a message
+    const para = document.createElement("p");
+    para.textContent = "No quotes found for the selected category.";
+    quoteDisplay.appendChild(para);
+  }
+}
+
+// Call filterQuotes when the dropdown changes
+document.getElementById("categoryFilter").addEventListener("change", filterQuotes);
