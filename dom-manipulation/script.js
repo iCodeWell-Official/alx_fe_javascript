@@ -6,7 +6,7 @@ const quoteDisplay = document.getElementById("quoteDisplay");
 let quotesArray = [
   { text: "text", category: "category" },
   {
-    text: "The harder you work for something, the greater you’ll feel when you achieve it.",
+    text: "The harder you work for something, the greater you'll feel when you achieve it.",
     category: "Motivation",
   },
   {
@@ -30,7 +30,7 @@ let quotesArray = [
     category: "Success",
   },
   {
-    text: "In the end, it’s not the years in your life that count, it’s the life in your years.",
+    text: "In the end, it's not the years in your life that count, it's the life in your years.",
     category: "Life",
   },
   {
@@ -42,7 +42,7 @@ let quotesArray = [
     category: "Happiness",
   },
   {
-    text: "It always seems impossible until it’s done.",
+    text: "It always seems impossible until it's done.",
     category: "Perseverance",
   },
 ];
@@ -100,15 +100,22 @@ function createAddQuoteForm() {
     if (quoteInput.value === "" || categoryInput.value === "") {
       alert("Please enter a quote and a category!");
     } else {
-      quotesArray.push({
+      const newQuote = {
         text: quoteInput.value,
         category: categoryInput.value,
-      });
+      };
+      quotesArray.push(newQuote);
       quoteInput.value = "";
       categoryInput.value = "";
 
       // save the quotes array to local storage
       localStorage.setItem("Quotes", JSON.stringify(quotesArray));
+
+      // Update categories and refresh the dropdown
+      populateCategories();
+
+      // Apply the current filter to show the new quote if applicable
+      filterQuotes();
     }
   });
 }
@@ -141,6 +148,8 @@ function importFromJsonFile(event) {
     const importedQuotes = JSON.parse(event.target.result);
     quotesArray.push(...importedQuotes);
     localStorage.setItem("Quotes", JSON.stringify(quotesArray));
+    populateCategories(); // Update categories after import
+    filterQuotes(); // Apply current filter to show new quotes
     alert("Quotes imported successfully!");
   };
   fileReader.readAsText(event.target.files[0]);
@@ -175,6 +184,9 @@ function populateCategories() {
   // Extract unique categories from the quotesArray
   const uniqueCategories = [...new Set(quotesArray.map((quote) => quote.category))];
 
+  // Save the current selection
+  const currentSelection = categoryFilter.value;
+
   // Remove any existing options (except 'All Categories')
   categoryFilter.innerHTML = '<option value="all">All Categories</option>';
 
@@ -185,12 +197,17 @@ function populateCategories() {
     option.textContent = category;
     categoryFilter.appendChild(option);
   });
-}
 
-// Call the function to populate categories on page load
-document.addEventListener("DOMContentLoaded", () => {
-  populateCategories();
-});
+  // Restore the previous selection if it still exists, otherwise default to 'all'
+  if (uniqueCategories.includes(currentSelection)) {
+    categoryFilter.value = currentSelection;
+  } else {
+    categoryFilter.value = 'all';
+  }
+
+  // Save categories to localStorage
+  localStorage.setItem("Categories", JSON.stringify(uniqueCategories));
+}
 
 function filterQuotes() {
   // Get the selected category from the dropdown
@@ -220,6 +237,9 @@ function filterQuotes() {
     para.textContent = "No quotes found for the selected category.";
     quoteDisplay.appendChild(para);
   }
+
+  // Re-create the add quote form after clearing the display
+  createAddQuoteForm();
 }
 
 // Restore the last selected category from localStorage
@@ -242,4 +262,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Call filterQuotes when the dropdown changes
 document.getElementById("categoryFilter").addEventListener("change", filterQuotes);
-
