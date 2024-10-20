@@ -69,37 +69,50 @@ document.addEventListener("DOMContentLoaded", () => {
   showLastViewedQuote();
 });
 
+function createAddQuoteForm() {
+  // create new div to contain the form inputs and button
+  const form = document.createElement("div");
 
+  // create input to add new quote, set class & ID and append it to the form div
+  const quoteInput = document.createElement("input");
+  quoteInput.id = "newQuoteText";
+  quoteInput.type = "text";
+  quoteInput.placeholder = "Enter a new quote";
+  form.appendChild(quoteInput);
 
+  // create input to add new category, set class & ID and append it to the form div
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter quote category";
+  form.appendChild(categoryInput);
 
+  // create add new quote button & append it to the form div
+  const addQuoteBtn = document.createElement("button");
+  addQuoteBtn.innerHTML = "Add Quote";
+  form.appendChild(addQuoteBtn);
 
-const addQuoteBtn = document.querySelector("div button");
-const quoteInput = document.getElementById("newQuoteText");
-const categoryInput = document.getElementById("newQuoteCategory");
+  // append the form div to the display area div
+  quoteDisplay.appendChild(form);
 
-// add function to handle 'Add Quote' button click
-    function addQuote () {
-  if (quoteInput.value === "" || categoryInput.value === "") {
-    alert("Please enter a quote and a category!");
-  } else {
-    quotesArray.push({
-      text: quoteInput.value,
-      category: categoryInput.value,
-    });
-    quoteInput.value = "";
-    categoryInput.value = "";
+  // add function to handle 'Add Quote' button click
+  addQuoteBtn.addEventListener("click", () => {
+    if (quoteInput.value === "" || categoryInput.value === "") {
+      alert("Please enter a quote and a category!");
+    } else {
+      quotesArray.push({
+        text: quoteInput.value,
+        category: categoryInput.value,
+      });
+      quoteInput.value = "";
+      categoryInput.value = "";
 
-    // save the quotes array to local storage
-    localStorage.setItem("Quotes", JSON.stringify(quotesArray));
-  }
+      // save the quotes array to local storage
+      localStorage.setItem("Quotes", JSON.stringify(quotesArray));
+    }
+  });
 }
-
-
-
-
-
-
-
+createAddQuoteForm();
 
 // Create export Button
 const exportBtn = document.getElementById("exportBtn");
@@ -229,17 +242,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Call filterQuotes when the dropdown changes
 document.getElementById("categoryFilter").addEventListener("change", filterQuotes);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
